@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Keynoxis",
+  "version": "0.1.0",
+  "identifier": "app.keynoxis.desktop",
+  "build": {
+    "beforeDevCommand": "npm run web:dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run web:build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Keynoxis",
+        "width": 1040,
+        "height": 720,
+        "minWidth": 760,
+        "minHeight": 560,
+        "center": true,
+        "resizable": true,
+        "visible": false,
+        "backgroundColor": "#0b0d0f",
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
+      },
+      {
+        "label": "auth",
+        "title": "Keynoxis",
+        "width": 380,
+        "height": 350,
+        "minWidth": 380,
+        "minHeight": 250,
+        "maxWidth": 380,
+        "maxHeight": 350,
+        "resizable": false,
+        "visible": false,
+        "backgroundColor": "#0b0d0f",
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
+      }
+    ],
+    "security": { "csp": null }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app", "dmg"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "category": "Utility",
+    "shortDescription": "Hardware-backed SSH agent",
+    "macOS": {
+      "minimumSystemVersion": "26.0",
+      "hardenedRuntime": true,
+      "entitlements": "./Entitlements.plist",
+      "frameworks": [
+        "./vendor/lib/libfido2.dylib",
+        "./vendor/lib/libKeynoxisSecureEnclave.dylib",
+        "./vendor/lib/libcbor.dylib",
+        "./vendor/lib/libcrypto.dylib"
+      ]
+    }
+  }
+}

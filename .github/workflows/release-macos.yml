@@ -1,0 +1,169 @@
+name: Release macOS
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-macos-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sign-notarize:
+    name: Sign and notarize macOS 26 arm64
+    runs-on: macos-26
+    timeout-minutes: 60
+    environment: release
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.release-files.outputs.version }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Set up Rust
+        run: |
+          rustup toolchain install 1.91.0 --profile minimal --component rustfmt
+          rustup default 1.91.0
+
+      - name: Install native dependencies
+        run: brew install libfido2
+
+      - name: Record toolchain and dependency versions
+        run: |
+          sw_vers
+          uname -m
+          xcodebuild -version
+          node --version
+          npm --version
+          rustc --version
+          brew list --versions libfido2 libcbor openssl@3
+
+      - name: Validate release version
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          configured_version=$(jq -r '.version' src-tauri/tauri.conf.json)
+          test "$RELEASE_TAG" = "v$configured_version" || {
+            echo "Tag $RELEASE_TAG does not match application version $configured_version" >&2
+            exit 1
+          }
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: |
+          npm test
+          npm run web:build
+          cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+          cargo test --manifest-path src-tauri/Cargo.toml --locked
+
+      - name: Validate release secrets
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_CONTENT: ${{ secrets.APPLE_API_KEY_CONTENT }}
+        run: |
+          test -n "$APPLE_CERTIFICATE" || { echo "APPLE_CERTIFICATE is missing" >&2; exit 1; }
+          test -n "$APPLE_CERTIFICATE_PASSWORD" || { echo "APPLE_CERTIFICATE_PASSWORD is missing" >&2; exit 1; }
+          test -n "$APPLE_API_ISSUER" || { echo "APPLE_API_ISSUER is missing" >&2; exit 1; }
+          test -n "$APPLE_API_KEY" || { echo "APPLE_API_KEY is missing" >&2; exit 1; }
+          test -n "$APPLE_API_KEY_CONTENT" || { echo "APPLE_API_KEY_CONTENT is missing" >&2; exit 1; }
+
+      - name: Materialize App Store Connect API key
+        env:
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_CONTENT: ${{ secrets.APPLE_API_KEY_CONTENT }}
+        run: |
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY}.p8"
+          printf '%s' "$APPLE_API_KEY_CONTENT" > "$api_key_path"
+          chmod 600 "$api_key_path"
+          echo "APPLE_API_KEY_PATH=$api_key_path" >> "$GITHUB_ENV"
+
+      - name: Build, sign and notarize
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+        run: npm run release:macos
+
+      - name: Verify signed distribution
+        env:
+          KEYNOXIS_REQUIRE_DISTRIBUTION_SIGNATURE: "1"
+        run: |
+          dmg_file=$(find src-tauri/target/release/bundle/dmg -maxdepth 1 -type f -name '*.dmg' -print -quit)
+          test -n "$dmg_file"
+          bash scripts/verify-macos-release.sh \
+            src-tauri/target/release/bundle/macos/Keynoxis.app \
+            "$dmg_file"
+
+      - name: Prepare release files
+        id: release-files
+        run: |
+          app_version=$(jq -r '.version' src-tauri/tauri.conf.json)
+          dmg_file=$(find src-tauri/target/release/bundle/dmg -maxdepth 1 -type f -name '*.dmg' -print -quit)
+          mkdir -p release
+          release_dmg="release/Keynoxis_${app_version}_aarch64.dmg"
+          cp "$dmg_file" "$release_dmg"
+          release_name=$(basename "$release_dmg")
+          (cd release && shasum -a 256 "$release_name" > "$release_name.sha256")
+          echo "version=$app_version" >> "$GITHUB_OUTPUT"
+
+      - name: Upload verified artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Keynoxis-${{ steps.release-files.outputs.version }}-macOS-arm64
+          path: release/
+          if-no-files-found: error
+
+      - name: Remove temporary API key
+        if: always()
+        run: rm -f "$APPLE_API_KEY_PATH"
+
+  publish:
+    name: Publish GitHub release
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: sign-notarize
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download verified release files
+        uses: actions/download-artifact@v4
+        with:
+          name: Keynoxis-${{ needs.sign-notarize.outputs.version }}-macOS-arm64
+          path: release
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_VERSION: ${{ needs.sign-notarize.outputs.version }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" release/* --clobber
+          else
+            gh release create "$RELEASE_TAG" release/* \
+              --verify-tag \
+              --title "Keynoxis $RELEASE_VERSION" \
+              --generate-notes
+          fi

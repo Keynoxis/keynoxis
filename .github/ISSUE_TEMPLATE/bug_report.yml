@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a reproducible problem in Keynoxis.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not use this form for security vulnerabilities or include credentials, PINs, private keys, device identifiers or private infrastructure details.
+  - type: input
+    id: version
+    attributes:
+      label: Keynoxis version or revision
+      placeholder: 0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS and hardware
+      placeholder: macOS 26.0, Apple M3
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Hardware backend
+      options:
+        - Secure Enclave
+        - FIDO2 security key
+        - Both
+        - Not applicable
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest reliable sequence that reproduces the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add redacted logs or screenshots if useful.

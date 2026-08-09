@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Keynoxis menu bar icon</title>
+  <desc id="desc">A padlock with the Keynoxis K inside a circular hardware badge.</desc>
+  <defs>
+    <mask id="lock-body">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="45" cy="45" r="19" fill="#000"/>
+      <circle cx="22" cy="35" r="3" fill="#000"/>
+      <rect x="20.5" y="37" width="3" height="7" rx="1.5" fill="#000"/>
+    </mask>
+    <mask id="badge">
+      <circle cx="45" cy="45" r="17" fill="#fff"/>
+      <path d="M38.5 35.5h4.5v7.1l6.1-7.1h5.6l-7.1 8 7.3 10h-5.5L44.6 47 43 48.8v4.7h-4.5z" fill="#000"/>
+    </mask>
+  </defs>
+  <path d="M14 26v-8a8 8 0 0 1 16 0v8" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+  <rect x="7" y="24" width="31" height="27" rx="5" fill="#000" mask="url(#lock-body)"/>
+  <circle cx="45" cy="45" r="17" fill="#000" mask="url(#badge)"/>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="480" viewBox="0 0 1800 480" role="img" aria-labelledby="title desc">
+  <title id="title">Keynoxis wordmark for dark backgrounds</title>
+  <desc id="desc">The Keynoxis security-core mark and light name for dark backgrounds.</desc>
+  <defs>
+    <radialGradient id="background" cx="50%" cy="38%" r="72%">
+      <stop offset="0" stop-color="#20262D"/>
+      <stop offset="0.56" stop-color="#11151A"/>
+      <stop offset="1" stop-color="#090B0D"/>
+    </radialGradient>
+    <linearGradient id="metal" gradientUnits="userSpaceOnUse" x1="350" y1="340" x2="680" y2="690">
+      <stop stop-color="#F2F5F7"/>
+      <stop offset="0.46" stop-color="#B9C3CC"/>
+      <stop offset="1" stop-color="#7D8994"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(32 32) scale(.40625)">
+    <rect width="1024" height="1024" rx="232" fill="url(#background)"/>
+    <rect x="18" y="18" width="988" height="988" rx="216" fill="none" stroke="#FFFFFF" stroke-opacity="0.07" stroke-width="3"/>
+    <circle cx="512" cy="512" r="342" fill="none" stroke="#AEB9C4" stroke-opacity="0.10" stroke-width="3" stroke-dasharray="9 18"/>
+    <circle cx="512" cy="512" r="292" fill="none" stroke="#AEB9C4" stroke-opacity="0.17" stroke-width="3"/>
+    <path d="M512 220a292 292 0 0 1 252 145" fill="none" stroke="#D6DCE1" stroke-opacity="0.38" stroke-width="5" stroke-linecap="round"/>
+    <path d="M264 666a292 292 0 0 1-44-154" fill="none" stroke="#7FBD8B" stroke-opacity="0.55" stroke-width="5" stroke-linecap="round"/>
+    <rect x="272" y="272" width="480" height="480" rx="132" fill="#151A1F" stroke="#FFFFFF" stroke-opacity="0.15" stroke-width="4"/>
+    <rect x="302" y="302" width="420" height="420" rx="108" fill="none" stroke="#FFFFFF" stroke-opacity="0.045" stroke-width="2"/>
+    <path d="M370 350h90v133L607 350h120L548 504l179 170H605L460 530v144h-90z" fill="url(#metal)"/>
+    <circle cx="768" cy="365" r="9" fill="#90C99B"/>
+    <circle cx="768" cy="365" r="16" fill="none" stroke="#90C99B" stroke-opacity="0.30" stroke-width="3"/>
+  </g>
+  <text x="510" y="286" fill="#F2F5F7" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="184" font-weight="750" letter-spacing="-8">Keynoxis</text>
+  <text x="520" y="356" fill="#AEB9C4" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="34" font-weight="500" letter-spacing="1.5">YOUR SSH KEYS STAY IN HARDWARE</text>
+</svg>

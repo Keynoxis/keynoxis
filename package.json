@@ -1,0 +1,36 @@
+{
+  "name": "keynoxis",
+  "private": true,
+  "version": "0.1.0",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/keynoxis/keynoxis.git"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "release:macos": "tauri build --bundles app,dmg",
+    "release:verify": "bash scripts/verify-macos-release.sh",
+    "web:dev": "vite",
+    "web:build": "vue-tsc --noEmit && vite build",
+    "test": "vitest run --passWithNoTests"
+  },
+  "engines": {
+    "node": ">=20 <25"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.8.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.0",
+    "@types/node": "^24.0.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "typescript": "^5.8.0",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.0",
+    "vue-tsc": "^3.0.0"
+  }
+}

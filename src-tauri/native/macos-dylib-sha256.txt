@@ -1,0 +1,5 @@
+# Pinned arm64 Homebrew inputs for the macOS 26+ bundle.
+# Update deliberately after reviewing an upstream native dependency upgrade.
+libfido2.dylib a43efeb0e89f8eb7733624510282a205c1dbd50d679563753ae0f57e26123ef2
+libcbor.dylib f4506b24b039167f9cd9b35d8b889b58b4b8b84bc8abaea13dfa7bd3742d23de
+libcrypto.dylib a12805a18cd5e4f733fa8727b91afa08b587f9da5a760517cd79cb508a3a3f71

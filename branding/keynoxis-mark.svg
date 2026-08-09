@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Keynoxis mark</title>
+  <desc id="desc">A steel K inside a dark hardware security core with a green status light.</desc>
+  <defs>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#20262D"/>
+      <stop offset="1" stop-color="#101318"/>
+    </linearGradient>
+    <linearGradient id="metal" gradientUnits="userSpaceOnUse" x1="320" y1="300" x2="710" y2="720">
+      <stop stop-color="#F2F5F7"/>
+      <stop offset="0.46" stop-color="#B9C3CC"/>
+      <stop offset="1" stop-color="#7D8994"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="512" cy="512" r="404" fill="none" stroke="#AEB9C4" stroke-opacity="0.16" stroke-width="4"/>
+  <path d="M512 108a404 404 0 0 1 348 202" fill="none" stroke="#D6DCE1" stroke-opacity="0.4" stroke-width="7" stroke-linecap="round"/>
+  <path d="M164 718a404 404 0 0 1-56-206" fill="none" stroke="#7FBD8B" stroke-opacity="0.65" stroke-width="7" stroke-linecap="round"/>
+  <rect x="172" y="172" width="680" height="680" rx="190" fill="url(#core)" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="5"/>
+  <rect x="214" y="214" width="596" height="596" rx="154" fill="none" stroke="#FFFFFF" stroke-opacity="0.055" stroke-width="3"/>
+  <path d="M310 282h128v188l207-188h169L562 500l252 242H642L438 538v204H310z" fill="url(#metal)"/>
+  <circle cx="838" cy="310" r="13" fill="#90C99B"/>
+  <circle cx="838" cy="310" r="23" fill="none" stroke="#90C99B" stroke-opacity="0.35" stroke-width="4"/>
+</svg>
